@@ -25,16 +25,9 @@ pinecone.init(
 
 index_name = PINECONE_INDEX
 
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 
-vectorstore = Pinecone.from_existing_index(index_name, embeddings)
-query = "Am i the asshole for not inviting myy mother to my wedding?"
-docs = vectorstore.similarity_search_with_score(query)
-# print(docs[0][1])
-# print(vectorstore.similarity_search(query))
 
-qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=OPENAI_API_KEY), chain_type="map_reduce",
-                                 retriever=vectorstore.as_retriever())
+
 
 # print(qa.run(query))
 
@@ -70,9 +63,16 @@ treshhold = 0.9
 
 
 def generate_response(input_text):
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    vectorstore = Pinecone.from_existing_index(index_name, embeddings)
+    qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type="stuff",
+                                     retriever=vectorstore.as_retriever())
     score = vectorstore.similarity_search_with_score(input_text)
     if score[0][1] >= treshhold:
-        st.info(qa.run(input_text))
+        response = qa.run(input_text)
+        st.info(response)
+        print(response)
+        print("vector version")
 
     else:
         llm = OpenAI(temperature=0, openai_api_key=openai_api_key)
@@ -90,7 +90,7 @@ def generate_response(input_text):
             memory=ConversationBufferWindowMemory(k=2),
         )
         st.info(chatgpt_chain.predict(human_input=input_text))
-
+        print("Prompt version")
 
 with st.form('my_form'):
     text = st.text_area('Enter text:', 'Am i the asshole for...?')
