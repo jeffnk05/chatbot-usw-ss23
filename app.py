@@ -23,13 +23,6 @@ pinecone.init(
     environment=PINECONE_ENV,  # next to api key in console
 )
 
-index_name = PINECONE_INDEX
-
-
-
-
-
-# print(qa.run(query))
 
 template = """
 
@@ -57,6 +50,13 @@ In case the user asks follow-up questions, DO NOT include the judgment, just ans
 
 st.title('Am I The Asshole')
 
+st.sidebar.markdown(
+    "## How to use\n"
+    "1. Enter your [OpenAI API key](https://platform.openai.com/account/api-keys) below🔑\n"  
+    "2. Describe your situation✍️\n"
+    "3. Receive a verdict🧑‍⚖️\n"
+)
+
 openai_api_key = st.sidebar.text_input('OpenAI API Key')
 
 treshhold = 0.9
@@ -64,6 +64,7 @@ treshhold = 0.9
 
 def generate_response(input_text):
     embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    index_name = PINECONE_INDEX
     vectorstore = Pinecone.from_existing_index(index_name, embeddings)
     qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type="stuff",
                                      retriever=vectorstore.as_retriever())
