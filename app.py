@@ -48,6 +48,8 @@ In case the user asks follow-up questions, DO NOT include the judgment, just ans
 
 """
 
+treshhold = 0.9
+
 st.title('Am I The Asshole')
 
 st.sidebar.markdown(
@@ -58,8 +60,6 @@ st.sidebar.markdown(
 )
 
 openai_api_key = st.sidebar.text_input('OpenAI API Key')
-
-treshhold = 0.9
 
 
 def generate_response(input_text):
