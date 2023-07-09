@@ -69,6 +69,7 @@ def generate_response(input_text):
     qa = RetrievalQA.from_chain_type(llm=OpenAI(openai_api_key=openai_api_key), chain_type="stuff",
                                      retriever=vectorstore.as_retriever())
     score = vectorstore.similarity_search_with_score(input_text)
+    print(score[0][1])
     if score[0][1] >= treshhold:
         response = qa.run(input_text)
         st.info(response)
