@@ -7,16 +7,11 @@ from langchain.chains import RetrievalQA
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
 import pinecone
-import os
 
-from dotenv import load_dotenv
 
-load_dotenv()
-
-PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
-PINECONE_ENV = os.getenv('PINECONE_ENV')
-PINECONE_INDEX = os.getenv('PINECONE_INDEX')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_API_KEY = st.secrets['PINECONE_API_KEY']
+PINECONE_ENV = st.secrets['PINECONE_ENV']
+PINECONE_INDEX = st.secrets['PINECONE_INDEX']
 
 pinecone.init(
     api_key=PINECONE_API_KEY,  # find at app.pinecone.io
