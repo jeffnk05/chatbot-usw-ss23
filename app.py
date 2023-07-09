@@ -43,7 +43,8 @@ In case the user asks follow-up questions, DO NOT include the judgment, just ans
 
 """
 
-treshhold = 0.9
+# This is the threshold for the similarity score
+threshold = 0.9
 
 st.title('Am I The Asshole')
 
@@ -65,7 +66,7 @@ def generate_response(input_text):
                                      retriever=vectorstore.as_retriever())
     score = vectorstore.similarity_search_with_score(input_text)
     print(score[0][1])
-    if score[0][1] >= treshhold:
+    if score[0][1] >= threshold:
         response = qa.run(input_text)
         st.info(response)
         print(response)
